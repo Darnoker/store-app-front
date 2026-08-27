@@ -3,9 +3,11 @@ import type { ProductDTO } from '../types/api';
 import { formatPrice } from '../utils/format';
 import { ProductVisual } from './ProductVisual';
 import { useCart } from '../cart/CartContext';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function ProductCard({ product }: { product: ProductDTO }) {
   const { add } = useCart();
+  const { language, t } = useLanguage();
 
   return (
     <article className="product-card">
@@ -14,17 +16,17 @@ export function ProductCard({ product }: { product: ProductDTO }) {
       </Link>
       <div className="product-card-body">
         <div className="product-card-meta">
-          <span className="eyebrow">{product.productType === 'BOOK' ? 'Książka' : 'Miecz'}</span>
-          <strong>{formatPrice(product.price)}</strong>
+          <span className="eyebrow">{product.productType === 'BOOK' ? t('book') : t('sword')}</span>
+          <strong>{formatPrice(product.price, 'PLN', language)}</strong>
         </div>
         <Link className="product-title" to={`/products/${product.id}`}>
           {product.name}
         </Link>
         <p>{product.description}</p>
         <div className="card-actions">
-          <Link className="text-link" to={`/products/${product.id}`}>Szczegóły</Link>
+          <Link className="text-link" to={`/products/${product.id}`}>{t('details')}</Link>
           <button className="button button-small" type="button" onClick={() => add(product)}>
-            Do koszyka
+            {t('addToCart')}
           </button>
         </div>
       </div>

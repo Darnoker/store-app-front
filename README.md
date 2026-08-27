@@ -1,47 +1,47 @@
 # Store App Frontend
 
-Frontend React + TypeScript dopasowany do backendu `Darnoker/store-app` i komunikujący się wyłącznie przez `gateway-service`.
+React + TypeScript frontend for the `Darnoker/store-app` backend, communicating exclusively through the `gateway-service`.
 
-## Uruchomienie
+## Getting started
 
-1. Uruchom backend tak, aby gateway działał na `http://localhost:8080`.
-2. W tym katalogu:
+1. Start the backend so that the gateway is available at `http://localhost:8080`.
+2. In this directory, run:
 
 ```bash
 npm install
 npm run dev
 ```
 
-Frontend będzie dostępny pod `http://localhost:5173`.
+The frontend will be available at `http://localhost:5173`.
 
-W trybie developerskim requesty do `/api/*` są proxyowane przez Vite do `http://localhost:8080/*`, więc na tym etapie nie musisz zmieniać CORS w backendzie.
+In development mode, Vite proxies requests to `/api/*` to `http://localhost:8080/*`, so you do not need to change the backend CORS configuration at this stage.
 
-## Obsługiwane endpointy
+## Supported endpoints
 
 - `POST /auth/register`
 - `POST /auth/login`
 - `GET /users/me`
 - `GET /products`
 - `GET /products/{productId}`
-- `POST /products` — panel ADMIN
+- `POST /products` — ADMIN panel
 - `POST /orders`
 - `GET /orders/me`
 - `GET /orders/{orderId}`
 
-## Konfiguracja API
+## API configuration
 
-Domyślnie:
+By default:
 
 ```env
 VITE_API_BASE_URL=/api
 ```
 
-Dla środowiska, w którym frontend ma bezpośrednio strzelać do publicznego gatewaya, ustaw np.:
+For an environment where the frontend should call a public gateway directly, set for example:
 
 ```env
 VITE_API_BASE_URL=https://api.example.com
 ```
 
-## Uwaga o JWT
+## JWT note
 
-Token jest zapisywany w `localStorage` i dodawany jako `Authorization: Bearer ...`. To pasuje do aktualnego backendu. Później możesz zmienić ten mechanizm na bezpieczniejsze ciasteczko HttpOnly, jeśli backend dostanie taki flow.
+The token is stored in `localStorage` and sent as `Authorization: Bearer ...`. This matches the current backend. You can later replace this mechanism with a more secure HttpOnly cookie if the backend supports that flow.

@@ -16,7 +16,7 @@ export function ProfilePage() {
           <div><span>User ID</span><strong>{shortId(user.userId)}</strong></div>
           <div><span>Status</span><strong>{user.status}</strong></div>
           <div><span>Role</span><strong>{user.roles.join(', ')}</strong></div>
-          <div><span>Konto utworzono</span><strong>{formatDate(user.createdAt)}</strong></div>
+          <div><span>Account created</span><strong>{formatDate(user.createdAt)}</strong></div>
         </div>
       </div>
     </section>

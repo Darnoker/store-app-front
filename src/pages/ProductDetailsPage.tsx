@@ -15,7 +15,7 @@ export function ProductDetailsPage() {
   const { add } = useCart();
 
   useEffect(() => {
-    productsApi.get(productId).then(setProduct).catch((e) => setError(e instanceof Error ? e.message : 'Nie udało się pobrać produktu.'));
+    productsApi.get(productId).then(setProduct).catch((e) => setError(e instanceof Error ? e.message : 'Unable to load the product.'));
   }, [productId]);
 
   if (error) {
@@ -23,7 +23,7 @@ export function ProductDetailsPage() {
   }
 
   if (!product) {
-    return <section className="section page-section"><div className="container inline-loader"><span className="spinner" /> Pobieranie produktu…</div></section>;
+    return <section className="section page-section"><div className="container inline-loader"><span className="spinner" /> Loading product…</div></section>;
   }
 
   const details = Object.entries(product.details).filter(([, value]) => value !== null && value !== undefined);
@@ -31,7 +31,7 @@ export function ProductDetailsPage() {
   return (
     <section className="section page-section">
       <div className="container">
-        <Link className="text-link back-link" to="/products">← Wróć do katalogu</Link>
+        <Link className="text-link back-link" to="/products">← Back to catalog</Link>
         <div className="product-detail-grid">
           <ProductVisual type={product.productType} large />
           <div className="product-detail-copy">
@@ -51,11 +51,11 @@ export function ProductDetailsPage() {
 
             <div className="buy-row">
               <label>
-                Ilość
+                Quantity
                 <input type="number" min="1" value={quantity} onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))} />
               </label>
               <button className="button" type="button" onClick={() => add(product, quantity)}>
-                Dodaj do koszyka
+                Add to cart
               </button>
             </div>
           </div>

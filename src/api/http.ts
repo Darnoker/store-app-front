@@ -59,14 +59,14 @@ export async function apiFetch<T>(path: string, options: ApiFetchOptions = {}): 
 
     const fallback =
       response.status === 401
-        ? 'Brak autoryzacji lub sesja wygasła.'
+        ? 'You are not authorized or your session has expired.'
         : response.status === 403
-          ? 'Nie masz uprawnień do tej operacji.'
+          ? 'You do not have permission to perform this operation.'
           : response.status === 404
-            ? 'Nie znaleziono zasobu.'
+            ? 'The resource was not found.'
             : response.status === 409
-              ? 'Zasób już istnieje lub wystąpił konflikt.'
-              : 'Wystąpił błąd komunikacji z API.';
+              ? 'The resource already exists or a conflict occurred.'
+              : 'An API communication error occurred.';
 
     throw new ApiError(response.status, fallback, body);
   }

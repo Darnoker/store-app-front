@@ -13,17 +13,17 @@ export function OrderDetailsPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    ordersApi.get(orderId).then(setOrder).catch((e) => setError(e instanceof Error ? e.message : 'Nie udało się pobrać zamówienia.'));
+    ordersApi.get(orderId).then(setOrder).catch((e) => setError(e instanceof Error ? e.message : 'Unable to load the order.'));
   }, [orderId]);
 
   if (error) return <section className="section page-section"><div className="container"><StatusMessage type="error">{error}</StatusMessage></div></section>;
-  if (!order) return <section className="section page-section"><div className="container inline-loader"><span className="spinner" /> Pobieranie zamówienia…</div></section>;
+  if (!order) return <section className="section page-section"><div className="container inline-loader"><span className="spinner" /> Loading order…</div></section>;
 
   return (
     <section className="section page-section">
       <div className="container narrow-container">
-        <Link className="text-link back-link" to="/orders">← Wszystkie zamówienia</Link>
-        {state?.created && <StatusMessage type="success">Zamówienie zostało utworzone.</StatusMessage>}
+        <Link className="text-link back-link" to="/orders">← All orders</Link>
+        {state?.created && <StatusMessage type="success">Order created.</StatusMessage>}
         <div className="order-detail-head">
           <div><span className="eyebrow">ORDER ID</span><h1>{order.orderId}</h1><p>{formatDate(order.createdAt)}</p></div>
           <span className="status-pill status-pill-large">{order.status}</span>
@@ -37,7 +37,7 @@ export function OrderDetailsPage() {
               <strong>{formatPrice(item.unitPrice * item.quantity, order.currency)}</strong>
             </div>
           ))}
-          <div className="order-total-line"><span>Razem</span><strong>{formatPrice(order.totalAmount, order.currency)}</strong></div>
+          <div className="order-total-line"><span>Total</span><strong>{formatPrice(order.totalAmount, order.currency)}</strong></div>
         </div>
       </div>
     </section>
