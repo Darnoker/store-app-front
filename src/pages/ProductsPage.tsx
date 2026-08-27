@@ -3,8 +3,10 @@ import { productsApi } from '../api/productsApi';
 import { ProductCard } from '../components/ProductCard';
 import { StatusMessage } from '../components/StatusMessage';
 import type { ProductDTO, ProductType } from '../types/api';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function ProductsPage() {
+  const { t } = useLanguage();
   const [products, setProducts] = useState<ProductDTO[]>([]);
   const [type, setType] = useState<ProductType | ''>('');
   const [minPrice, setMinPrice] = useState('');
@@ -23,7 +25,7 @@ export function ProductsPage() {
       });
       setProducts(data);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Nie udało się pobrać produktów.');
+      setError(e instanceof Error ? e.message : t('unableProducts'));
     } finally {
       setLoading(false);
     }
@@ -40,42 +42,42 @@ export function ProductsPage() {
       <div className="container">
         <div className="page-title-row">
           <div>
-            <span className="eyebrow">KATALOG</span>
-            <h1>Produkty</h1>
-            <p>Filtrowanie korzysta bezpośrednio z parametrów API product-service.</p>
+            <span className="eyebrow">CATALOG</span>
+            <h1>{t('products')}</h1>
+            <p>Filtering uses the product service API parameters directly.</p>
           </div>
         </div>
 
         <form className="filter-bar" onSubmit={(event) => { event.preventDefault(); void load(); }}>
           <label>
-            Typ
+            {t('type')}
             <select value={type} onChange={(e) => setType(e.target.value as ProductType | '')}>
-              <option value="">Wszystkie</option>
-              <option value="BOOK">Książki</option>
-              <option value="SWORD">Miecze</option>
+              <option value="">{t('all')}</option>
+              <option value="BOOK">{t('books')}</option>
+              <option value="SWORD">{t('swords')}</option>
             </select>
           </label>
           <label>
-            Cena od
+            {t('minPrice')}
             <input type="number" min="0" step="0.01" value={minPrice} onChange={(e) => setMinPrice(e.target.value)} placeholder="0" />
           </label>
           <label>
-            Cena do
-            <input type="number" min="0" step="0.01" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder="bez limitu" />
+            {t('maxPrice')}
+            <input type="number" min="0" step="0.01" value={maxPrice} onChange={(e) => setMaxPrice(e.target.value)} placeholder={t('noLimit')} />
           </label>
-          <button className="button" type="submit">Filtruj</button>
+          <button className="button" type="submit">{t('filter')}</button>
         </form>
 
         {error && <StatusMessage type="error">{error}</StatusMessage>}
 
         {loading ? (
-          <div className="inline-loader"><span className="spinner" /> Pobieranie katalogu…</div>
+          <div className="inline-loader"><span className="spinner" /> Loading catalog…</div>
         ) : products.length ? (
           <div className="product-grid">
             {products.map((product) => <ProductCard key={product.id} product={product} />)}
           </div>
         ) : (
-          <div className="empty-state"><strong>Brak produktów.</strong><p>Zmień filtry albo dodaj produkt jako administrator.</p></div>
+          <div className="empty-state"><strong>{t('noProducts')}</strong><p>{t('noProductsText')}</p></div>
         )}
       </div>
     </section>

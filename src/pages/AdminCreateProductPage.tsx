@@ -20,7 +20,7 @@ export function AdminCreateProductPage() {
     setSubmitting(true);
     setError('');
 
-    const details = base.productType === 'BOOK'
+    const details: Record<string, string | number> = base.productType === 'BOOK'
       ? { isbn: book.isbn, pages: Number(book.pages), author: book.author, publisher: book.publisher, language: book.language }
       : { damage: Number(sword.damage), weight: Number(sword.weight), length: Number(sword.length), material: sword.material };
 
@@ -34,7 +34,7 @@ export function AdminCreateProductPage() {
       });
       navigate(`/products/${product.id}`);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Nie udało się utworzyć produktu.');
+      setError(e instanceof Error ? e.message : 'Unable to create the product.');
     } finally {
       setSubmitting(false);
     }
@@ -44,18 +44,18 @@ export function AdminCreateProductPage() {
     <section className="section page-section">
       <div className="container form-container">
         <span className="eyebrow">ADMIN</span>
-        <h1>Dodaj produkt</h1>
-        <p>Formularz odwzorowuje `CreateProductRequest` i domenowe `details` dla BOOK/SWORD.</p>
+        <h1>Add product</h1>
+        <p>This form maps to `CreateProductRequest` and the domain-specific `details` for BOOK/SWORD.</p>
         {error && <StatusMessage type="error">{error}</StatusMessage>}
 
         <form className="admin-form" onSubmit={submit}>
           <div className="form-section">
-            <h2>Dane podstawowe</h2>
-            <label>Nazwa<input required maxLength={255} value={base.name} onChange={(e) => setBase({ ...base, name: e.target.value })} /></label>
-            <label>Opis<textarea required rows={5} value={base.description} onChange={(e) => setBase({ ...base, description: e.target.value })} /></label>
+            <h2>Basic information</h2>
+            <label>Name<input required maxLength={255} value={base.name} onChange={(e) => setBase({ ...base, name: e.target.value })} /></label>
+            <label>Description<textarea required rows={5} value={base.description} onChange={(e) => setBase({ ...base, description: e.target.value })} /></label>
             <div className="form-row">
-              <label>Cena (PLN)<input required type="number" min="0.01" step="0.01" value={base.price} onChange={(e) => setBase({ ...base, price: e.target.value })} /></label>
-              <label>Typ<select value={base.productType} onChange={(e) => setBase({ ...base, productType: e.target.value as ProductType })}><option value="BOOK">BOOK</option><option value="SWORD">SWORD</option></select></label>
+              <label>Price (PLN)<input required type="number" min="0.01" step="0.01" value={base.price} onChange={(e) => setBase({ ...base, price: e.target.value })} /></label>
+              <label>Type<select value={base.productType} onChange={(e) => setBase({ ...base, productType: e.target.value as ProductType })}><option value="BOOK">BOOK</option><option value="SWORD">SWORD</option></select></label>
             </div>
           </div>
 
@@ -63,9 +63,9 @@ export function AdminCreateProductPage() {
             <h2>Details / {base.productType}</h2>
             {base.productType === 'BOOK' ? (
               <>
-                <div className="form-row"><label>ISBN<input required value={book.isbn} onChange={(e) => setBook({ ...book, isbn: e.target.value })} /></label><label>Liczba stron<input required type="number" min="1" value={book.pages} onChange={(e) => setBook({ ...book, pages: e.target.value })} /></label></div>
-                <label>Autor<input required value={book.author} onChange={(e) => setBook({ ...book, author: e.target.value })} /></label>
-                <div className="form-row"><label>Wydawca<input required value={book.publisher} onChange={(e) => setBook({ ...book, publisher: e.target.value })} /></label><label>Język<input required value={book.language} onChange={(e) => setBook({ ...book, language: e.target.value })} /></label></div>
+                <div className="form-row"><label>ISBN<input required value={book.isbn} onChange={(e) => setBook({ ...book, isbn: e.target.value })} /></label><label>Pages<input required type="number" min="1" value={book.pages} onChange={(e) => setBook({ ...book, pages: e.target.value })} /></label></div>
+                <label>Author<input required value={book.author} onChange={(e) => setBook({ ...book, author: e.target.value })} /></label>
+                <div className="form-row"><label>Publisher<input required value={book.publisher} onChange={(e) => setBook({ ...book, publisher: e.target.value })} /></label><label>Language<input required value={book.language} onChange={(e) => setBook({ ...book, language: e.target.value })} /></label></div>
               </>
             ) : (
               <>
@@ -74,7 +74,7 @@ export function AdminCreateProductPage() {
               </>
             )}
           </div>
-          <button className="button" disabled={submitting} type="submit">{submitting ? 'Zapisywanie…' : 'Utwórz produkt'}</button>
+          <button className="button" disabled={submitting} type="submit">{submitting ? 'Saving…' : 'Create product'}</button>
         </form>
       </div>
     </section>

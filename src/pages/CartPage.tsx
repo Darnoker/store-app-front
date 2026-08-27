@@ -5,8 +5,10 @@ import { useAuth } from '../auth/AuthContext';
 import { useCart } from '../cart/CartContext';
 import { StatusMessage } from '../components/StatusMessage';
 import { formatPrice } from '../utils/format';
+import { useLanguage } from '../i18n/LanguageContext';
 
 export function CartPage() {
+  const { language, t } = useLanguage();
   const { items, total, setQuantity, remove, clear } = useCart();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -28,7 +30,7 @@ export function CartPage() {
       clear();
       navigate(`/orders/${order.orderId}`, { state: { created: true } });
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Nie udało się utworzyć zamówienia.');
+      setError(e instanceof Error ? e.message : 'Unable to create the order.');
     } finally {
       setSubmitting(false);
     }
@@ -38,17 +40,17 @@ export function CartPage() {
     <section className="section page-section">
       <div className="container">
         <div className="page-title-row">
-          <div><span className="eyebrow">ZAMÓWIENIE</span><h1>Koszyk</h1></div>
-          {items.length > 0 && <button className="link-button" type="button" onClick={clear}>Wyczyść koszyk</button>}
+          <div><span className="eyebrow">{t('order')}</span><h1>{t('cart')}</h1></div>
+          {items.length > 0 && <button className="link-button" type="button" onClick={clear}>{t('clearCart')}</button>}
         </div>
 
         {error && <StatusMessage type="error">{error}</StatusMessage>}
 
         {items.length === 0 ? (
           <div className="empty-state">
-            <strong>Koszyk jest pusty.</strong>
-            <p>Dodaj książkę albo miecz z katalogu.</p>
-            <Link className="button" to="/products">Przejdź do produktów</Link>
+            <strong>{t('cartEmpty')}</strong>
+            <p>{t('cartEmptyText')}</p>
+            <Link className="button" to="/products">{t('browseProducts')}</Link>
           </div>
         ) : (
           <div className="cart-layout">
@@ -59,23 +61,23 @@ export function CartPage() {
                   <div className="cart-item-copy">
                     <span className="eyebrow">{product.productType}</span>
                     <Link to={`/products/${product.id}`}>{product.name}</Link>
-                    <small>{formatPrice(product.price)} / szt.</small>
+                    <small>{formatPrice(product.price, 'PLN', language)} / {t('item')}</small>
                   </div>
-                  <label className="qty-control">Ilość<input type="number" min="1" value={quantity} onChange={(e) => setQuantity(product.id, Number(e.target.value))} /></label>
-                  <strong>{formatPrice(product.price * quantity)}</strong>
-                  <button className="remove-button" type="button" onClick={() => remove(product.id)} aria-label={`Usuń ${product.name}`}>×</button>
+                  <label className="qty-control">{t('quantity')}<input type="number" min="1" value={quantity} onChange={(e) => setQuantity(product.id, Number(e.target.value))} /></label>
+                  <strong>{formatPrice(product.price * quantity, 'PLN', language)}</strong>
+                  <button className="remove-button" type="button" onClick={() => remove(product.id)} aria-label={`Remove ${product.name}`}>×</button>
                 </article>
               ))}
             </div>
 
             <aside className="order-summary">
-              <span className="eyebrow">PODSUMOWANIE</span>
-              <div><span>Pozycje</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div>
-              <div className="summary-total"><span>Razem</span><strong>{formatPrice(total)}</strong></div>
+              <span className="eyebrow">{t('summary')}</span>
+              <div><span>{t('items')}</span><strong>{items.reduce((sum, item) => sum + item.quantity, 0)}</strong></div>
+              <div className="summary-total"><span>{t('total')}</span><strong>{formatPrice(total, 'PLN', language)}</strong></div>
               <button className="button button-full" type="button" disabled={submitting} onClick={() => void checkout()}>
-                {submitting ? 'Tworzenie zamówienia…' : isAuthenticated ? 'Złóż zamówienie' : 'Zaloguj się i zamów'}
+                {submitting ? 'Creating order…' : isAuthenticated ? 'Place order' : 'Sign in to order'}
               </button>
-              <small>Backend przypisze zamówienie do użytkownika na podstawie JWT.</small>
+              <small>The backend assigns the order to the user based on the JWT.</small>
             </aside>
           </div>
         )}
